@@ -1,0 +1,147 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  previewFeatures = ["postgresqlExtensions"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  extensions = [rdkit]
+}
+
+enum Role {
+  Admin
+  ProcurementOfficer
+  Researcher
+}
+
+enum Category {
+  Reagent
+  Sample
+}
+
+enum Package {
+  Bottle
+  SolventsBox
+  PackageBox
+}
+
+model User {
+  id                      Int     @id @default(autoincrement())
+  firstName               String
+  lastName                String
+  email                   String  @unique
+  password                String
+  role                    Role
+  isPasswordResetRequired Boolean  @default(false)
+  sessions                Session[]  @ignore
+  reagentRequests         ReagentRequest[]
+}
+
+model Session {
+  id            Int      @id @default(autoincrement())
+  userId        Int      @unique 
+  isLoggedIn    Boolean
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt     DateTime @default(now())
+  refreshToken  String   @unique
+
+  @@index([refreshToken])  
+}
+
+model Reagent {
+  id            Int      @id @default(autoincrement())
+  name          String
+  casNumber     String?
+  producer      String?
+  catalogId     String?
+  catalogLink   String?
+  pricePerUnit  Float?
+  quantityUnit  String
+  totalQuantity Float
+  description   String?
+  quantityLeft  Float
+  expirationDate  DateTime?
+  storageId     Int
+  category      Category
+  structure     String?
+  package       Package?
+  isDeleted     Boolean  @default(false)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  storage       Storage  @relation(fields: [storageId], references: [id])
+
+  usedReagentSample    Reagent[]   @relation("Prepared")  //parents  Reagents or Samples that were used during the creation of this Sample
+  usedBy               Reagent[]    @relation("Prepared")  //children Samples that were created by using this Reagent or a Sample
+}
+
+model Storage {
+  id          Int      @id @default(autoincrement())
+  roomId      Int
+  room        Room     @relation(fields: [roomId], references: [id])
+  name        String   
+  description String?  
+  reagents    Reagent[] 
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@unique([roomId, name]) 
+}
+
+model Room {
+  id          Int               @id @default(autoincrement())
+  name        String            @unique
+  description String?         
+  storages   Storage[] 
+}
+
+enum Status {
+  Pending
+  Ordered
+  Fulfilled
+  Declined
+  Submitted
+  Completed
+}
+
+model ReagentRequest {
+  id                    Int      @id @default(autoincrement())
+  userId                Int
+  user                  User     @relation(fields: [userId], references: [id])
+  name                  String
+  structureSmiles       String?
+  casNumber             String?
+  desiredQuantity       Float
+  quantityUnit          String
+  userComments          String?
+  procurementComments   String?
+  status                Status   @default(Pending)
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt 
+  order                 Order?   @relation(fields: [orderId], references: [id])
+  orderId               Int?
+  package               Package?
+  producer              String?
+  catalogId             String?
+  catalogLink           String?
+  pricePerUnit          Float?
+  expirationDate        DateTime?
+  hide                  Boolean @default(false)
+}
+
+model Order {
+  id        Int              @id @default(autoincrement())
+  userId    Int
+  title     String
+  seller    String
+  status    Status
+  reagents  ReagentRequest[]
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
+}

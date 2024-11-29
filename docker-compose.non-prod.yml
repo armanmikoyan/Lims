@@ -1,0 +1,11 @@
+services:
+  app:
+    container_name: lims_be_non_prod_app
+    build:
+      context: .
+      target: development
+    ports:
+      - "3001:3000"
+    environment:
+      NODE_ENV: development
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}

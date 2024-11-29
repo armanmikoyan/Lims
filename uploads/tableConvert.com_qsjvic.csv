@@ -1,0 +1,3 @@
+name,casNumber,producer,catalogId,catalogLink,pricePerUnit,quantityUnit,totalQuantity,description,quantityLeft,expirationDate,storageId,structure,package
+Reagent A CSV,58-08-2,Producer A,CATALOG001,https://e-shop.com/catalog,234,ml,5.5,A sample reagent,10,2024-12-31T23:59:59,1,Cc1nc(C)c(C(=O)N/N=C/c2cccnc2)cc1C(=O)N/N=C/c1cccnc1,Bottle
+Reagent B CSV,,Producer B,CATALOG002,https://e-shop.com/catalog,500,ml,10,Another sample reagent,20,2025-01-01T23:59:59,2,,SolventsBox

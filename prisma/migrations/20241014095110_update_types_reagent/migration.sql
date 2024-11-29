@@ -1,0 +1,6 @@
+ALTER TABLE "Reagent" ALTER COLUMN "totalQuantity" DROP NOT NULL;
+
+ALTER TABLE "Reagent"ALTER COLUMN "quantityLeft" SET DATA TYPE DOUBLE PRECISION,
+ALTER COLUMN "totalQuantity" SET DATA TYPE DOUBLE PRECISION USING "totalQuantity"::double precision;
+
+ALTER TABLE "Reagent" ALTER COLUMN "totalQuantity" SET NOT NULL;
