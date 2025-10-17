@@ -1,3 +1,14 @@
+
+**LIMS (Laboratory Information Management System)** is a software solution designed to manage, track, and automate various laboratory processes and data.  
+It helps laboratories handle everything from **sample registration** and **test tracking** to **data storage**, **report generation**, and **quality control**.
+
+### 
+- **Sample Management** – Track samples throughout their lifecycle.  
+- **Test & Result Tracking** – Manage experiments, results, and approvals.  
+- **User & Role Management** – Ensure secure access control.  
+- **Inventory Management** – Monitor lab supplies and equipment.  
+- **Automated Reporting** – Generate and export lab reports easily.  
+- **Audit Trails** – Maintain full traceability and compliance with lab standards.
 # E-LAB Backend
 
 This is the backend service for the E-LAB project, built with Nest.js and TypeScript, and utilizing Docker for containerization and Prisma for database management.
